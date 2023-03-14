@@ -12,5 +12,5 @@ class BatchMode(object):
     def __exit__(self, type, value, trace):
         if 'idat' in os.path.basename(sys.executable):
             idc.qexit(0)
-        # idc.qexit(0)
+        idc.qexit(0)
         # else: debugging, do nothing
