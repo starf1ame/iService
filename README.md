@@ -86,7 +86,7 @@ The IDA commands are a little longer due to the absolute path required. For exam
 The details of IDA commands are referred to ["IDA Help: Command line switches"](https://www.hex-rays.com/products/ida/support/idadoc/417.shtml)
  
 
-#### 3. Look into CVE-2021-30774
+#### 3. Dive into CVE-2021-30774
 
 To demonstrate the effectiveness of iService, we use CVE-2021-30774 as an example (related binary are given in the `cases` folder). The critical code snippet is depicted in the figure follows and details are discussed in the motivating example in the paper.
 
@@ -97,8 +97,9 @@ To demonstrate the effectiveness of iService, we use CVE-2021-30774 as an exampl
 Using node.js parallel script step by step:
 * After Steps 1 and 2: service and framework binaries are analyzed with functions' abstract dumped in `cases/10.15.7/pkls`
 * After Step 3: those functions are committed to the Neo4j graph database.
-    Visit the URL at http://localhost:7474/ (the username is `neo4j`, and the password is `j4one` ) and then switch to the database `osanalyticshelper`, we can see that the graph of this service contains 4,608 nodes with 12,414 relations.
-    We can also query path among nodes to learn data dependence among variables. 
+    * Visit the URL at http://localhost:7474/ (the username is `neo4j`, and the password is `j4one` ) and then switch to the database `osanalyticshelper`, we can see that the graph of this service contains 4,608 nodes with 12,414 relations.
+    * We can also query path among nodes to learn data dependence among variables, e.g., `MATCH (a:gLocalVar {vid:'+[OSASystemConfiguration ensureConformanceOfFile:]$2'}), (b:gLocalVar {vid:'sub_10000281F$1'}), path = shortestpath((a)-[:DATA_DEP|COME_FROM*]->(b)) RETURN path ORDER BY LENGTH(path) DESC LIMIT 1`. 
+    * By executing the above query command, we can get the inter-procedural dataflow from the external input to the key parameter of the sensitive operation.
 <div  align="center">   
 <img src="resources/neo4j.png" width = "90%"  alt="CVE-2021-30774 details">
 </div>
